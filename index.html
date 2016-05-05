@@ -3,14 +3,23 @@
 <head>
     <title>DLX-Assembler Interpreter &copy; 2011-2016 Sven Hüser</title>
     <meta charset="utf-8">
+    <meta name="description" content="A DLX-Assembler Interpreter written in JavaScript to aid myself doing homework.">
     <link rel="stylesheet" href="codemirror/codemirror.css">
     <link rel="stylesheet" href="dlx.css">
     <link rel="stylesheet" href="codemirror/dlx-light.css">
     <link rel="stylesheet" href="codemirror/dlx-dark.css">
+
+    <script src="codemirror/codemirror.js"></script>
+    <script src="codemirror/active-line.js"></script>
+    <script src="codemirror/dlx.js"></script>
+    <script src="base64.js"></script>
+    <script src="Sortable.min.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
     <div id="tooltip"></div>
     <div id="container">
+        <a id="fork" href="https://github.com/huesersohn/dlx" target="_blank">View on GitHub</a>
         <div id="controls">
             <div class="right">
                 <button id="btn-save-load">Save / Load</button>
@@ -172,12 +181,5 @@
             </ul>
         </div>
     </div>
-
-    <script src="codemirror/codemirror.js"></script>
-    <script src="codemirror/active-line.js"></script>
-    <script src="codemirror/dlx.js"></script>
-    <script src="base64.js"></script>
-    <script src="Sortable.min.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>

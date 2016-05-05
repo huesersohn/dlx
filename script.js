@@ -630,7 +630,7 @@ DLX.Launch = function() {
     DLX.LoadSave = function() {
         var str = '';
         var storedSave = window.localStorage.getItem(DLX.SaveTo);
-        if (!storedSave) {
+        /* if (!storedSave) {
             console.log('No save found. Looking for old save to import some data...');
             var old = window.localStorage.getItem('programs');
             if (old) {
@@ -644,8 +644,10 @@ DLX.Launch = function() {
             }
         } else {
             str = unescape(storedSave);
+        } */
+        if (storedSave) {
+          str = unescape(storedSave);
         }
-
 
         if (str != '') {
             var version = 0;

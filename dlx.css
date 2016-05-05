@@ -1,6 +1,19 @@
 body {
   margin: 0;
 }
+#fork {
+  float: right;
+  text-decoration: none;
+  padding: 2px;
+  line-height: 25px;
+  color: black;
+  background: white;
+}
+#fork:hover{
+  transition: background 100ms;
+  background: #333;
+  color: white;
+}
 #tooltip {
   position: absolute;
   display: none;
