@@ -1,0 +1,183 @@
+<!doctype html>
+<html manifest="dlx.appcache">
+<head>
+    <title>DLX-Assembler Interpreter &copy; 2011-2016 Sven Hüser</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="codemirror/codemirror.css">
+    <link rel="stylesheet" href="dlx.css">
+    <link rel="stylesheet" href="codemirror/dlx-light.css">
+    <link rel="stylesheet" href="codemirror/dlx-dark.css">
+</head>
+<body>
+    <div id="tooltip"></div>
+    <div id="container">
+        <div id="controls">
+            <div class="right">
+                <button id="btn-save-load">Save / Load</button>
+                <button id="btn-settings">Settings</button>
+            </div>
+            <div>
+                <button id="btn-run">Run</button>
+                <button id="btn-play">Play</button>
+                <button id="btn-pause">Pause</button>
+                <button id="btn-step">Step</button>
+                <button id="btn-reset">Reset</button>
+            </div>
+            <div class="devide">
+                <button id="btn-reg">Clear registers</button>
+                <button id="btn-mem">Clear memory</button>
+            </div>
+        </div>
+        <div id="editor-wrap">
+            <textarea id="editor"></textarea>
+        </div>
+        <div id="registers">
+            <div></div>
+            <div class="registers">R00 <input type="text" class="register" value="0" readonly></div>
+            <div class="registers"></div>
+        </div>
+        <div id="memory"></div>
+        <div id="settings">
+            <div class="right"><button>Close</button></div>
+            <h3>Settings</h3>
+            <div class="setting">
+                <label>First address in memory:</label>
+                <div class="btn-group">
+                    <label>
+                        <input type="radio" name="first-address" value="0">
+                        <span class="btn-group-item">0</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="first-address" value="1000">
+                        <span class="btn-group-item">1000</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="first-address" value="2000">
+                        <span class="btn-group-item">2000</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting">
+                <label>Execute this many lines before prompting for abortion:</label>
+                <div class="btn-group">
+                    <label>
+                        <input type="radio" name="allowed-execs" value="10000">
+                        <span class="btn-group-item">10,000</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="allowed-execs" value="100000">
+                        <span class="btn-group-item">100,000</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="allowed-execs" value="500000">
+                        <span class="btn-group-item">500,000</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="allowed-execs" value="-1">
+                        <span class="btn-group-item">Don't ask</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting">
+                <label>When playing, execute next line after:</label>
+                <div class="btn-group">
+                    <label>
+                        <input type="radio" name="play-delay" value="10">
+                        <span class="btn-group-item">10 ms</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="play-delay" value="100">
+                        <span class="btn-group-item">100 ms</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="play-delay" value="300">
+                        <span class="btn-group-item">300 ms</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="play-delay" value="1000">
+                        <span class="btn-group-item">1 sec</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="play-delay" value="2000">
+                        <span class="btn-group-item">2 sec</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting">
+                <label>Pressing the Step-button can restart:</label>
+                <div class="btn-group">
+                    <label>
+                        <input type="radio" name="step-restart" value="1">
+                        <span class="btn-group-item">Yes</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="step-restart" value="0">
+                        <span class="btn-group-item">No</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting">
+                <label>Editor theme:</label>
+                <div class="btn-group">
+                    <label>
+                        <input type="radio" name="theme" value="light">
+                        <span class="btn-group-item">light</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="theme" value="dark">
+                        <span class="btn-group-item">dark</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="debug">
+                <h3>For debugging</h3>
+                <div class="setting">
+                    <label>Show debug settings:</label>
+                    <div class="btn-group">
+                        <label>
+                            <input type="radio" name="debug-settings" value="1">
+                            <span class="btn-group-item">Yes</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="debug-settings" value="0">
+                            <span class="btn-group-item">No</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="setting">
+                    <label>Correct warnings (allows immediates bigger than 16 bits):</label>
+                    <div class="btn-group">
+                        <label>
+                            <input type="radio" name="correct-warning" value="1">
+                            <span class="btn-group-item">Yes</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="correct-warning" value="0">
+                            <span class="btn-group-item">No</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="save-load">
+            <div class="right"><button>Close</button></div>
+            <h3>Example programs</h3>
+            <ul id="examples">
+                <li class="example">Is n even? (1)</li><li class="example">Is n even? (2)</li><li class="example">Sum of 1 to n</li><li class="example">Is n prime?</li><li class="example">Sum n recursive</li>
+            </ul>
+            <h3>Saved programs<span id="export-import"><span id="export">export</span> / <span id="import">import</span></span></h3>
+            <ul id="saves">
+                <li id="save-auto">Reload autosave</li><li id="save-new">New</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="codemirror/codemirror.js"></script>
+    <script src="codemirror/active-line.js"></script>
+    <script src="codemirror/dlx.js"></script>
+    <script src="base64.js"></script>
+    <script src="Sortable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+body {
+  margin: 0;
+}
+#tooltip {
+  position: absolute;
+  display: none;
+  z-index: 1000;
+  background: #333;
+  color: white;
+  font-family: Courier, monospace;
+  border: 2px solid #888;
+  padding: 3px;
+}
+#tooltip.cm-s-dlx-light span {
+  background: white;
+}
+#tooltip.cm-s-dlx-light span.black {
+  color: black;
+}
+#tooltip.cm-s-dlx-dark span {
+  background: #1b1b1b;
+}
+#tooltip.cm-s-dlx-dark span.black {
+  color: #f8f6f2;
+}
+#tooltip span {
+  padding: 3px;
+  margin: -3px;
+}
+.CodeMirror {
+  font-family: Courier, monospace;
+  border: 1px solid #ddd;
+  height: 400px;
+}
+.CodeMirror.cm-s-dlx-light .DLXerror {
+  background: rgba(255, 109, 71, 0.3);
+}
+.CodeMirror.cm-s-dlx-light .DLXerror + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  background: rgba(255, 109, 71, 0.5);
+  color: white;
+}
+.CodeMirror.cm-s-dlx-light .DLXwarning {
+  background: rgba(255, 215, 0, 0.3);
+}
+.CodeMirror.cm-s-dlx-light .DLXwarning + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  background: rgba(255, 215, 0, 0.5);
+  color: black;
+}
+.CodeMirror.cm-s-dlx-light .DLXcurrent {
+  background: rgba(100, 50, 100, 0.5);
+}
+.CodeMirror.cm-s-dlx-light .CodeMirror-activeline .DLXhighlighted {
+  opacity: .5;
+}
+.CodeMirror.cm-s-dlx-light .CodeMirror-activeline .DLXhighlighted + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  opacity: .5;
+}
+.CodeMirror.cm-s-dlx-light .CodeMirror-activeline .DLXhighlighted.DLXcurrent + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  opacity: 1;
+}
+.CodeMirror.cm-s-dlx-dark .DLXerror {
+  background: rgba(255, 109, 71, 0.5);
+}
+.CodeMirror.cm-s-dlx-dark .DLXerror + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  background: rgba(255, 109, 71, 0.8);
+  color: white;
+}
+.CodeMirror.cm-s-dlx-dark .DLXwarning {
+  background: rgba(255, 215, 0, 0.5);
+}
+.CodeMirror.cm-s-dlx-dark .DLXwarning + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  background: rgba(255, 215, 0, 0.8);
+  color: black;
+}
+.CodeMirror.cm-s-dlx-dark .DLXcurrent {
+  background: rgba(200, 100, 200, 0.6) !important;
+}
+.CodeMirror .DLXhighlighted + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  cursor: help;
+}
+.CodeMirror .DLXhighlighted + .CodeMirror-gutter-wrapper .CodeMirror-linenumber.DLXcurrent + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
+  cursor: default;
+}
+#container {
+  width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+#container nav {
+  float: right;
+}
+#container nav ul {
+  margin: 0;
+  padding: 0;
+}
+#container nav ul li {
+  list-style: none;
+  display: inline-block;
+}
+#container nav ul li a {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Lato, Calibri, Arial, sans-serif;
+  margin-left: 20px;
+  color: black;
+  font-weight: 700;
+  font-size: 16px;
+  font-size: 1rem;
+  line-height: 30px;
+  border-bottom: 1px dotted black;
+}
+#container nav ul li a:hover {
+  border-bottom-style: solid;
+}
+#container .right {
+  float: right;
+}
+#container #settings,
+#container #save-load {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 1px;
+  background: white;
+  outline: 1px solid #ccc;
+  padding: 5px;
+  width: 890px;
+  height: 422px;
+}
+#container #settings h3,
+#container #save-load h3 {
+  margin: 3px 0;
+}
+#container #settings button,
+#container #save-load button {
+  background: transparent;
+  border: none;
+  outline: 1px solid #ccc;
+  padding: 3px 5px;
+  line-height: 25px;
+  font-size: 16px;
+  font-family: serif;
+  margin: -5px;
+  transition: background 100ms;
+}
+#container #settings button:hover,
+#container #save-load button:hover {
+  background: #333;
+  color: white;
+}
+#container #settings button:active,
+#container #save-load button:active {
+  background: #ccc;
+  color: black;
+}
+#container #settings .setting {
+  margin: 1em 0;
+}
+#container #settings .debug {
+  border-top: 1px dashed silver;
+}
+#container #save-load {
+  display: none;
+}
+#container #save-load #export-import {
+  display: none;
+  margin-left: 5px;
+  font-size: 12px;
+}
+#container #save-load #export-import span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+#container #save-load ul {
+  margin: 0;
+  padding: 0;
+}
+#container #save-load ul li {
+  list-style: none;
+  display: inline-block;
+  border: 1px solid black;
+  text-align: center;
+  margin: 1px 3px;
+  height: 34px;
+  overflow: hidden;
+}
+#container #save-load ul li:after {
+  content: '';
+  clear: both;
+}
+#container #save-load ul li.example {
+  padding: 7px 10px;
+  width: 149px;
+  height: 20px;
+}
+#container #save-load ul li.example:hover {
+  cursor: pointer;
+  background: silver;
+}
+#container #save-load ul li#save-new,
+#container #save-load ul li#save-auto {
+  padding: 8px 0;
+  width: 169px;
+  height: 18px;
+  border: 1px dashed silver;
+  cursor: pointer;
+}
+#container #save-load ul li#save-new:hover,
+#container #save-load ul li#save-auto:hover {
+  background: silver;
+}
+#container #save-load ul li#save-auto {
+  border: 1px solid black;
+}
+#container #save-load ul li.save span {
+  padding: 8px 2px;
+  display: inline-block;
+  cursor: pointer;
+}
+#container #save-load ul li.save .save-overwrite {
+  border-right: 1px solid silver;
+  float: left;
+}
+#container #save-load ul li.save .save-overwrite:before {
+  content: 'O';
+}
+#container #save-load ul li.save .save-overwrite:hover {
+  background: lightgreen;
+  border-right-color: lightgreen;
+}
+#container #save-load ul li.save .save-overwrite:hover ~ .save-name {
+  background: lightgreen;
+  font-size: 0;
+}
+#container #save-load ul li.save .save-overwrite:hover ~ .save-name:before {
+  content: 'Overwrite';
+  font-size: 16px;
+}
+#container #save-load ul li.save .save-delete {
+  border-left: 1px solid silver;
+  float: right;
+}
+#container #save-load ul li.save .save-delete:before {
+  content: 'D';
+}
+#container #save-load ul li.save .save-delete:hover {
+  background: lightcoral;
+  border-left-color: lightcoral;
+}
+#container #save-load ul li.save .save-delete:hover ~ .save-name {
+  background: lightcoral;
+  font-size: 0;
+}
+#container #save-load ul li.save .save-delete:hover ~ .save-name:before {
+  content: 'Delete';
+  font-size: 16px;
+}
+#container #save-load ul li.save .save-name {
+  width: 132px;
+}
+#container #save-load ul li.save .save-name:hover {
+  background: silver;
+}
+#container #controls {
+  width: 900px;
+}
+#container #controls div {
+  display: inline-block;
+}
+#container #controls div.devide {
+  border-left: 10px solid silver;
+  padding-left: 1px;
+  margin-left: -3px;
+}
+#container #controls div button {
+  cursor: pointer;
+  min-width: 50px;
+  border: none;
+  outline: 1px solid #ccc;
+  padding: 3px 5px;
+  margin: 0 1px;
+  line-height: 25px;
+  font-size: 16px;
+  font-family: serif;
+  background: transparent;
+  transition: background 100ms;
+}
+#container #controls div button:hover {
+  background: #333;
+  color: white;
+}
+#container #controls div button:active {
+  background: #ccc;
+  color: black;
+}
+#container #controls div #btn-pause {
+  display: none;
+}
+#container #editor-wrap {
+  width: 900px;
+  display: inline-block;
+}
+#container #registers {
+  display: inline-block;
+  vertical-align: top;
+}
+#container #registers .registers {
+  display: inline-block;
+  width: 140px;
+}
+#container #registers .registers .register {
+  border: 1px solid #ccc;
+  width: 100px;
+  text-align: right;
+}
+#container .memories {
+  width: 150px;
+  display: inline-block;
+}
+#container .memories .memory {
+  border: 1px solid #ccc;
+  width: 90px;
+  text-align: right;
+}
+#container .rm-NaN {
+  background: lightcoral;
+  color: white;
+}
+#container .rm-IOB {
+  background: gold;
+}
+.btn-group {
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn-group input {
+  display: none;
+}
+.btn-group label {
+  float: left;
+}
+.btn-group label .btn-group-item {
+  background: white;
+  cursor: pointer;
+  display: inline-block;
+  padding: 1px 7px;
+  border-bottom: 1px solid silver;
+  border-left: 0;
+  border-right: 1px solid #eee;
+  border-top: 1px solid silver;
+  border-radius: 0;
+  min-width: 20px;
+  text-align: center;
+}
+.btn-group label .btn-group-item:hover {
+  background: #ddd;
+}
+.btn-group label:first-child .btn-group-item {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-left: 1px solid silver;
+}
+.btn-group label:last-child .btn-group-item {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-right: 1px solid silver;
+}
+.btn-group label input:checked + .btn-group-item {
+  background: #477dca;
+  color: white;
+  border: 1px solid #2c5999;
+  box-shadow: inset 0 1px 2px #3264ac;
+}

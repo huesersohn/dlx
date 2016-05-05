@@ -1,0 +1,11 @@
+.cm-s-dlx-dark.CodeMirror {background: #1b1b1b; color: #f8f6f2;}
+.cm-s-dlx-dark span.cm-comment {color: #857f78; font-style: italic;}
+.cm-s-dlx-dark span.cm-command {color: #ff2c4b;}
+.cm-s-dlx-dark span.cm-register {color: #ffa724;}
+.cm-s-dlx-dark span.cm-immediate {color: #aeee00;}
+.cm-s-dlx-dark span.cm-marker {color: #0a9dff;}
+.cm-s-dlx-dark span.cm-address {color: #ff9eb8;}
+.cm-s-dlx-dark .CodeMirror-gutters {background: #1b1b1b; border-right-color: #1b1b1b;}
+.cm-s-dlx-dark .CodeMirror-cursor {border-left: 2px solid #0a9dff !important;}
+.cm-s-dlx-dark .CodeMirror-activeline-background {background: rgba(106,104,100,.5) !important;}
+.cm-s-dlx-dark .CodeMirror-activeline .CodeMirror-linenumber {color: yellow;}
