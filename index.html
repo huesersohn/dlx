@@ -4,6 +4,7 @@
     <title>DLX-Assembler Interpreter &copy; 2011-2016 Sven Hüser</title>
     <meta charset="utf-8">
     <meta name="description" content="A DLX-Assembler Interpreter written in JavaScript to aid myself doing homework.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="codemirror/codemirror.css">
     <link rel="stylesheet" href="dlx.css">
     <link rel="stylesheet" href="codemirror/dlx-light.css">
@@ -40,12 +41,13 @@
         <div id="editor-wrap">
             <textarea id="editor"></textarea>
         </div>
+        <br>
         <div id="registers">
             <div></div>
-            <div class="registers">R00 <input type="text" class="register" value="0" readonly></div>
+            <div class="registers">R00 <input type="text" class="register" value="0" readonly><br></div>
             <div class="registers"></div>
         </div>
-        <div id="memory"></div>
+        <span id="memory"></span>
         <div id="settings">
             <div class="right"><button>Close</button></div>
             <h3>Settings</h3>

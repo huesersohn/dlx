@@ -763,13 +763,14 @@ DLX.Launch = function() {
         // generate register inputs
         var insertInnerHTML = '';
         for (var _i = 1; _i < 16; _i++) {
-            insertInnerHTML += 'R'+(_i < 10 ? '0'+_i : _i)+' <input type="text" class="register">';
+            insertInnerHTML += 'R'+(_i < 10 ? '0'+_i : _i)+' <input type="text" class="register"> <br>';
         }
         $$('registers')[0].innerHTML += insertInnerHTML;
         insertInnerHTML = '';
-        for (var _i = 16; _i < 32; _i++) {
-            insertInnerHTML += '<input type="text" class="register"> R'+_i;
+        for (var _i = 16; _i < 31; _i++) {
+            insertInnerHTML += '<input type="text" class="register"> R'+_i + '<br>';
         }
+        insertInnerHTML += '<input type="text" class="register"> R'+31 ;
         $$('registers')[1].innerHTML = insertInnerHTML;
         DLX.Registers = $$('register');
         // generate memory
