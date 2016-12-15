@@ -138,7 +138,7 @@ body {
   background: white;
   outline: 1px solid #ccc;
   padding: 5px;
-  width: 100%;
+  width: 99%;
   height: 422px;
 }
 #container #settings h3,
@@ -314,13 +314,18 @@ body {
   width: 100%;
   display: inline-block;
 }
+
+#container .registerDiv {
+  float: left;
+}
+
 #container #registers {
   display: inline-block;
-  vertical-align: top;
+  /*vertical-align: top;*/
 }
 #container #registers .registers {
   display: inline-block;
-  width: 150px;
+  /*width: 150px;*/
 }
 #container #registers .registers .register {
   border: 1px solid #ccc;
