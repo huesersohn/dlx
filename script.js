@@ -182,6 +182,13 @@ DLX.Launch = function() {
 
     DLX.PC = 0;
     DLX.PROGRESS_PC = true;
+    DLX.CYCLECOUNT = new Object();
+    DLX.CYCLECOUNT.ALL = 0;       //reguired cycles
+    DLX.CYCLECOUNT.MEMORY = 0;    // thereof with memory access
+
+    DLX.RefreshCyclecount = function() {
+      $('cyclecount').innerHTML = DLX.CYCLECOUNT.ALL + " (" + DLX.CYCLECOUNT.MEMORY + ")";
+    }
 
     DLX.playing = false;
     DLX.paused = false;
@@ -204,7 +211,10 @@ DLX.Launch = function() {
 
     DLX.Play = function() {
         var ret;
-        if (!DLX.paused) ret = DLX.Step();
+        if (!DLX.paused) {
+          ret = DLX.Step();
+          DLX.RefreshCyclecount();
+        }
 
         if (!DLX.paused) {
             if (!DLX.HALTED && ret == DLX.returnCodes.SUCCESS) {
@@ -223,6 +233,8 @@ DLX.Launch = function() {
     };
 
     DLX.Reset = function() {
+        DLX.CYCLECOUNT.ALL = 0;
+        DLX.CYCLECOUNT.MEMORY = 0;
         if (!DLX.paused) $('btn-pause').click();
         DLX.ReadProgram();
     };
@@ -234,6 +246,8 @@ DLX.Launch = function() {
         if (DLX.Settings.STEP_RESTART && DLX.HALTED) {
             DLX.PC = 0;
             DLX.HALTED = false;
+            DLX.CYCLECOUNT.NORMAL = 0;
+            DLX.CYCLECOUNT.MEMORY = 0;
         } else if (DLX.PC == DLX.program.length) {
             DLX.HALTED = true;
             return ret;
@@ -263,6 +277,8 @@ DLX.Launch = function() {
     };
 
     DLX.Run = function() {
+        DLX.CYCLECOUNT.ALL = 0;
+        DLX.CYCLECOUNT.MEMORY = 0;
         var _PROTECT = 0;
         var ret = DLX.ReadProgram();
         if (!(ret & DLX.returnCodes.ERROR)) {
@@ -276,12 +292,14 @@ DLX.Launch = function() {
                     _PROTECT++;
                     if (_PROTECT == DLX.Settings.ALLOWED_EXECS) {
                         var goon = window.confirm('The program has been running some time. Keep running?');
+                        DLX.RefreshCyclecount();
                         if (goon) _PROTECT = 0;
                         else break;
                     }
                 }
             }
         }
+        DLX.RefreshCyclecount();
         return ret;
     };
 
@@ -501,6 +519,7 @@ DLX.Launch = function() {
         var o = DLX.commands[c][1];
         var dest,ev;
         if (r == 'ra' || r == 'ar') {
+            DLX.CYCLECOUNT.MEMORY++;
             // SW or LW
             dest = o(p[0], true);
             if (typeof dest == 'string') {
@@ -555,6 +574,7 @@ DLX.Launch = function() {
             // HALT or TRAP
             DLX.HALTED = true;
         }
+        DLX.CYCLECOUNT.ALL++;
         return ret;
     };
 
