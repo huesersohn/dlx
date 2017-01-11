@@ -182,11 +182,21 @@ DLX.Launch = function() {
 
     DLX.PC = 0;
     DLX.PROGRESS_PC = true;
+    DLX.CYCLECOUNT = new Object();
+    DLX.CYCLECOUNT.ALL = 0;       //reguired cycles
+    DLX.CYCLECOUNT.MEMORY = 0;    // thereof with memory access
+
+    DLX.RefreshCyclecount = function() {
+      $('cyclecount').innerHTML = DLX.CYCLECOUNT.ALL + " (" + DLX.CYCLECOUNT.MEMORY + ")";
+    }
 
     DLX.playing = false;
     DLX.paused = false;
     DLX.StartPlaying = function() {
         if (!DLX.playing) {
+            DLX.CYCLECOUNT.ALL = 0;
+            DLX.CYCLECOUNT.MEMORY = 0;
+            DLX.RefreshCyclecount();
             DLX.playing = true;
             DLX.paused = false;
 
@@ -204,7 +214,10 @@ DLX.Launch = function() {
 
     DLX.Play = function() {
         var ret;
-        if (!DLX.paused) ret = DLX.Step();
+        if (!DLX.paused) {
+          ret = DLX.Step();
+          DLX.RefreshCyclecount();
+        }
 
         if (!DLX.paused) {
             if (!DLX.HALTED && ret == DLX.returnCodes.SUCCESS) {
@@ -223,6 +236,8 @@ DLX.Launch = function() {
     };
 
     DLX.Reset = function() {
+        DLX.CYCLECOUNT.ALL = 0;
+        DLX.CYCLECOUNT.MEMORY = 0;
         if (!DLX.paused) $('btn-pause').click();
         DLX.ReadProgram();
     };
@@ -234,6 +249,8 @@ DLX.Launch = function() {
         if (DLX.Settings.STEP_RESTART && DLX.HALTED) {
             DLX.PC = 0;
             DLX.HALTED = false;
+            DLX.CYCLECOUNT.ALL = 0;
+            DLX.CYCLECOUNT.MEMORY = 0;
         } else if (DLX.PC == DLX.program.length) {
             DLX.HALTED = true;
             return ret;
@@ -263,6 +280,8 @@ DLX.Launch = function() {
     };
 
     DLX.Run = function() {
+        DLX.CYCLECOUNT.ALL = 0;
+        DLX.CYCLECOUNT.MEMORY = 0;
         var _PROTECT = 0;
         var ret = DLX.ReadProgram();
         if (!(ret & DLX.returnCodes.ERROR)) {
@@ -276,12 +295,14 @@ DLX.Launch = function() {
                     _PROTECT++;
                     if (_PROTECT == DLX.Settings.ALLOWED_EXECS) {
                         var goon = window.confirm('The program has been running some time. Keep running?');
+                        DLX.RefreshCyclecount();
                         if (goon) _PROTECT = 0;
                         else break;
                     }
                 }
             }
         }
+        DLX.RefreshCyclecount();
         return ret;
     };
 
@@ -501,6 +522,7 @@ DLX.Launch = function() {
         var o = DLX.commands[c][1];
         var dest,ev;
         if (r == 'ra' || r == 'ar') {
+            DLX.CYCLECOUNT.MEMORY++;
             // SW or LW
             dest = o(p[0], true);
             if (typeof dest == 'string') {
@@ -555,6 +577,7 @@ DLX.Launch = function() {
             // HALT or TRAP
             DLX.HALTED = true;
         }
+        DLX.CYCLECOUNT.ALL++;
         return ret;
     };
 
@@ -762,15 +785,16 @@ DLX.Launch = function() {
     DLX.BuildInterface = function() {
         // generate register inputs
         var insertInnerHTML = '';
-        for (var _i = 1; _i < 16; _i++) {
-            insertInnerHTML += 'R'+(_i < 10 ? '0'+_i : _i)+' <input type="text" class="register">';
+        for (var _i = 1; _i < 32; _i++) {
+            insertInnerHTML += '<div class="registerDiv">&nbsp;' + 'R'+(_i < 10 ? '0'+_i : _i)+' <input type="text" class="register"> </div>';//'<br>';
         }
         $$('registers')[0].innerHTML += insertInnerHTML;
-        insertInnerHTML = '';
-        for (var _i = 16; _i < 32; _i++) {
-            insertInnerHTML += '<input type="text" class="register"> R'+_i;
+        /*insertInnerHTML = '';
+        for (var _i = 16; _i < 31; _i++) {
+            insertInnerHTML += '<div class="registerDiv"> R' +_i + '<input type="text" class="register"> '+'</div>';//+ '<br>';
         }
-        $$('registers')[1].innerHTML = insertInnerHTML;
+        insertInnerHTML += '<input type="text" class="register"> R'+31 ;
+        $$('registers')[1].innerHTML = insertInnerHTML;*/
         DLX.Registers = $$('register');
         // generate memory
         insertInnerHTML = '';
@@ -850,7 +874,10 @@ DLX.Launch = function() {
             this.style.display = 'none';
             DLX.Pause();
         });
-        $('btn-step').addEventListener('click', function() {DLX.Step();});
+        $('btn-step').addEventListener('click', function() {
+          DLX.Step();
+          DLX.RefreshCyclecount();
+        });
         $('btn-reset').addEventListener('click', function() {DLX.Reset();});
 
 
