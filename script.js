@@ -194,6 +194,9 @@ DLX.Launch = function() {
     DLX.paused = false;
     DLX.StartPlaying = function() {
         if (!DLX.playing) {
+            DLX.CYCLECOUNT.ALL = 0;
+            DLX.CYCLECOUNT.MEMORY = 0;
+            DLX.RefreshCyclecount();
             DLX.playing = true;
             DLX.paused = false;
 
@@ -246,7 +249,7 @@ DLX.Launch = function() {
         if (DLX.Settings.STEP_RESTART && DLX.HALTED) {
             DLX.PC = 0;
             DLX.HALTED = false;
-            DLX.CYCLECOUNT.NORMAL = 0;
+            DLX.CYCLECOUNT.ALL = 0;
             DLX.CYCLECOUNT.MEMORY = 0;
         } else if (DLX.PC == DLX.program.length) {
             DLX.HALTED = true;
@@ -871,7 +874,10 @@ DLX.Launch = function() {
             this.style.display = 'none';
             DLX.Pause();
         });
-        $('btn-step').addEventListener('click', function() {DLX.Step();});
+        $('btn-step').addEventListener('click', function() {
+          DLX.Step();
+          DLX.RefreshCyclecount();
+        });
         $('btn-reset').addEventListener('click', function() {DLX.Reset();});
 
 
