@@ -544,10 +544,15 @@ DLX.Launch = function() {
                 ret = ev;
             } else {
                 if (o) {
-                    DLX.getRegister(31, true).value = DLX.PC+1;
+                    DLX.getRegister(31, true).value = DLX.PC+2; // künstlich um 1 erhöhen, weil die Zeilen einen 0 Index haben
                 }
                 if (c.slice(-1) == 'R') {
-                    DLX.PC = ev[0];
+                    if (p[0] && p [0] == 'R31') {
+                        // R31 ist das Sprungregister; künstliche Änderung von oben rückgängig machen
+                        DLX.PC = ev[0]-1;
+                    } else {
+                        DLX.PC = ev[0];
+                    }
                 } else {
                     DLX.PC += ev[0];
                 }
