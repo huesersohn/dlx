@@ -95,7 +95,7 @@ body {
   cursor: default;
 }
 #container {
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
   position: relative;
 }
@@ -311,7 +311,8 @@ body {
   display: none;
 }
 #container #editor-wrap {
-  width: 900px;
+  max-width: 900px;
+  width: calc(100% - 300px);
   display: inline-block;
 }
 #container #registers {
