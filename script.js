@@ -103,7 +103,7 @@ DLX.Launch = function() {
         ALLOWED_EXECS: 10000,
         PLAY_DELAY: 300,
         STEP_RESTART: 1,
-        THEME: 'light',
+        THEME: 'dark',
         AUTOSAVE: 1,
 
         // hidden
@@ -119,7 +119,7 @@ DLX.Launch = function() {
         cursorHeight: .85,
         lineNumbers: true,
         indentUnit: 4,
-        theme: 'dlx-dark',
+        theme: 'dlx-'+DLX.Settings.THEME,
         extraKeys: {
             Tab: function(cm) {
                 if (cm.somethingSelected()) {
@@ -665,7 +665,6 @@ DLX.Launch = function() {
             // some version checking here, sometime maybe
             // settings
             spl = str[2].split(';');
-            var settingsWithDefault = []
             DLX.Settings.FIRST_ADDRESS = parseInt(spl[0]);
             DLX.Settings.ALLOWED_EXECS = parseInt(spl[1]);
             DLX.Settings.PLAY_DELAY = parseInt(spl[2]);
