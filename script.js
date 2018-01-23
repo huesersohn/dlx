@@ -94,7 +94,7 @@ DLX Interpreter
 var DLX = {};
 
 DLX.Launch = function() {
-    DLX.version = 3.150128;
+    DLX.version = 3.180123;
     DLX.SaveTo = 'DLXInterpreter';
 
     // Settings
@@ -104,6 +104,7 @@ DLX.Launch = function() {
         PLAY_DELAY: 300,
         STEP_RESTART: 1,
         THEME: 'light',
+        AUTOSAVE: 1,
 
         // hidden
         DEBUG_SETTINGS: 0,
@@ -620,16 +621,14 @@ DLX.Launch = function() {
     };
 
     DLX.autoSavedProgram = '';
-    DLX.shouldAutoSave = false;
     DLX.AutoSave = function() {
-        if (DLX.shouldAutoSave) {
+        if (DLX.Settings.AUTOSAVE) {
             DLX.autoSavedProgram = utf8_to_b64(DLX.Editor.getValue());
             console.log('autosaving...');
             DLX.WriteSave();
-            DLX.shouldAutoSave = false;
         }
     };
-    DLX.autoSaveInterval = window.setInterval(DLX.AutoSave, 60*1000);
+    DLX.autoSaveInterval = window.setInterval(DLX.AutoSave, 15*1000);
     DLX.WriteSave = function() {
         var str = '';
         str += DLX.version + '|';
@@ -641,7 +640,8 @@ DLX.Launch = function() {
             DLX.Settings.STEP_RESTART+';'+
             DLX.Settings.THEME+';'+
             DLX.Settings.DEBUG_SETTINGS+';'+
-            DLX.Settings.CORRECT_WARNING+
+            DLX.Settings.CORRECT_WARNING+';'+
+            DLX.Settings.AUTOSAVE+
             '|';
         str += DLX.autoSavedProgram+'|';
         str += // saved programs
@@ -653,21 +653,6 @@ DLX.Launch = function() {
     DLX.LoadSave = function() {
         var str = '';
         var storedSave = window.localStorage.getItem(DLX.SaveTo);
-        /* if (!storedSave) {
-            console.log('No save found. Looking for old save to import some data...');
-            var old = window.localStorage.getItem('programs');
-            if (old) {
-                var parse = old.split('PRGRMDLM'), _p;
-                for (var _i = 0; parse[_i]; _i++) {
-                    _p = JSON.parse(parse[_i]);
-                    _p.code = escape(utf8_to_b64(_p.code));
-                    DLX.savedPrograms.push(_p);
-                    DLX.addSaveSlot(_p.name);
-                }
-            }
-        } else {
-            str = unescape(storedSave);
-        } */
         if (storedSave) {
           str = unescape(storedSave);
         }
@@ -680,6 +665,7 @@ DLX.Launch = function() {
             // some version checking here, sometime maybe
             // settings
             spl = str[2].split(';');
+            var settingsWithDefault = []
             DLX.Settings.FIRST_ADDRESS = parseInt(spl[0]);
             DLX.Settings.ALLOWED_EXECS = parseInt(spl[1]);
             DLX.Settings.PLAY_DELAY = parseInt(spl[2]);
@@ -688,6 +674,9 @@ DLX.Launch = function() {
             DLX.Editor.setOption('theme', 'dlx-'+DLX.Settings.THEME);
             DLX.Settings.DEBUG_SETTINGS = parseInt(spl[5]);
             DLX.Settings.CORRECT_WARNING = parseInt(spl[6]);
+            if (version >= 3.180123) {
+                DLX.Settings.AUTOSAVE = spl[7] ? parseInt(spl[7]) : 1;
+            }
             // current code
             spl = str[3];
             spl = unescape(spl);
@@ -846,6 +835,13 @@ DLX.Launch = function() {
                 DLX.WriteSave();
             });
         }
+        radios = document.getElementsByName('autosave');
+        for (var _i = 0; radios[_i]; _i++) {
+            radios[_i].addEventListener('click', function() {
+                DLX.Settings.AUTOSAVE = parseInt(this.value);
+                DLX.WriteSave();
+            });
+        }
         radios = document.getElementsByName('debug-settings');
         for (var _i = 0; radios[_i]; _i++) {
             radios[_i].addEventListener('click', function() {
@@ -887,6 +883,7 @@ DLX.Launch = function() {
             s.querySelector('input[name="play-delay"][value="'+DLX.Settings.PLAY_DELAY+'"]').checked = true;
             s.querySelector('input[name="step-restart"][value="'+DLX.Settings.STEP_RESTART+'"]').checked = true;
             s.querySelector('input[name="theme"][value="'+DLX.Settings.THEME+'"]').checked = true;
+            s.querySelector('input[name="autosave"][value="'+DLX.Settings.AUTOSAVE+'"]').checked = true;
 
             s.querySelector('input[name="debug-settings"][value="'+DLX.Settings.DEBUG_SETTINGS+'"]').checked = true;
             s.querySelector('input[name="correct-warning"][value="'+DLX.Settings.CORRECT_WARNING+'"]').checked = true;
@@ -918,7 +915,6 @@ DLX.Launch = function() {
         $('save-auto').addEventListener('click', function() {
             var svd = b64_to_utf8(DLX.autoSavedProgram);
             DLX.Editor.setValue(svd);
-            DLX.shouldAutoSave = false;
             $('save-load').querySelector('button').click();
         });
 
