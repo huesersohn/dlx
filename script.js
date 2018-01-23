@@ -998,3 +998,7 @@ window.addEventListener('load', function(e) {
   }, false);
 
 }, false);
+
+window.addEventListener( 'beforeunload', function(e) {
+    return e.returnValue = 'You might not have saved!';
+}, false);
