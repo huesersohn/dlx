@@ -776,17 +776,17 @@ DLX.Launch = function() {
         for (var _i = 1; _i < 16; _i++) {
             insertInnerHTML += '<label>R'+(_i < 10 ? '0'+_i : _i)+' <input type="text" class="register"></label>';
         }
-        $$('registers')[0].innerHTML += insertInnerHTML;
+        $$('register-col')[0].innerHTML += insertInnerHTML;
         insertInnerHTML = '';
         for (var _i = 16; _i < 32; _i++) {
             insertInnerHTML += '<label><input type="text" class="register"> R'+_i+'</label>';
         }
-        $$('registers')[1].innerHTML = insertInnerHTML;
+        $$('register-col')[1].innerHTML = insertInnerHTML;
         DLX.Registers = $$('register');
         // generate memory
         insertInnerHTML = '';
         for (var _i = 0; _i < 8; _i++) {
-            insertInnerHTML += '<div class="memories">';
+            insertInnerHTML += '<div class="memory-col">';
             for (var _j = 0; _j < 32; _j++) {
                 insertInnerHTML += '<label><span class="memory-address"></span>'+' <input type="text" class="memory"></label>';
             }

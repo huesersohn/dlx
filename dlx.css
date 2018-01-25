@@ -319,20 +319,20 @@ body {
   display: inline-block;
   vertical-align: top;
 }
-#container #registers .registers {
+#container #registers .register-col {
   display: inline-block;
   width: 140px;
 }
-#container #registers .registers .register {
+#container #registers .register-col .register {
   border: 1px solid #ccc;
   width: 100px;
   text-align: right;
 }
-#container .memories {
+#container .memory-col {
   width: 150px;
   display: inline-block;
 }
-#container .memories .memory {
+#container .memory-col .memory {
   border: 1px solid #ccc;
   width: 90px;
   text-align: right;
