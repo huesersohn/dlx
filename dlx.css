@@ -156,6 +156,7 @@ body {
   font-family: serif;
   margin: -5px;
   transition: background 100ms;
+  color: black;
 }
 #container #settings button:hover,
 #container #save-load button:hover {
@@ -298,6 +299,7 @@ body {
   font-family: serif;
   background: transparent;
   transition: background 100ms;
+  color: black;
 }
 #container #controls div button:hover {
   background: #333;
@@ -319,23 +321,33 @@ body {
   display: inline-block;
   vertical-align: top;
 }
-#container #registers .registers {
+#container #registers .register-col {
   display: inline-block;
   width: 140px;
 }
-#container #registers .registers .register {
+#container #registers .register-col .register {
   border: 1px solid #ccc;
   width: 100px;
   text-align: right;
 }
-#container .memories {
+#container #registers .register-col .register:read-only {
+  background-color: #ddd;
+}
+#container #registers .register-col .register:-moz-read-only {
+  background-color: #ddd;
+}
+#container .memory-col {
   width: 150px;
   display: inline-block;
 }
-#container .memories .memory {
+#container .memory-col .memory {
   border: 1px solid #ccc;
   width: 90px;
   text-align: right;
+}
+#container .register-col label,
+#container .memory-col label {
+  font-size: 14px;
 }
 #container .rm-NaN {
   background: lightcoral;
