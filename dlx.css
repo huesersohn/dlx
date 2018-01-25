@@ -345,6 +345,10 @@ body {
   width: 90px;
   text-align: right;
 }
+#container .register-col label,
+#container .memory-col label {
+  font-size: 14px;
+}
 #container .rm-NaN {
   background: lightcoral;
   color: white;
