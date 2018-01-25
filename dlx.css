@@ -141,32 +141,12 @@ body {
   width: 890px;
   height: 422px;
 }
+#container #save-load .sl-control {
+  margin: -5px;
+}
 #container #settings h3,
 #container #save-load h3 {
   margin: 3px 0;
-}
-#container #settings button,
-#container #save-load button {
-  background: transparent;
-  border: none;
-  outline: 1px solid #ccc;
-  padding: 3px 5px;
-  line-height: 25px;
-  font-size: 16px;
-  font-family: serif;
-  margin: -5px;
-  transition: background 100ms;
-  color: black;
-}
-#container #settings button:hover,
-#container #save-load button:hover {
-  background: #333;
-  color: white;
-}
-#container #settings button:active,
-#container #save-load button:active {
-  background: #ccc;
-  color: black;
 }
 #container #settings .setting {
   margin: 1em 0;
@@ -177,14 +157,9 @@ body {
 #container #save-load {
   display: none;
 }
-#container #save-load #export-import {
+#container #save-load #file-import,
+#container #save-load #anchor-export {
   display: none;
-  margin-left: 5px;
-  font-size: 12px;
-}
-#container #save-load #export-import span:hover {
-  text-decoration: underline;
-  cursor: pointer;
 }
 #container #save-load ul {
   margin: 0;
@@ -282,32 +257,10 @@ body {
 #container #controls div {
   display: inline-block;
 }
-#container #controls div.devide {
+#container #controls div.divide {
   border-left: 10px solid silver;
   padding-left: 1px;
   margin-left: -3px;
-}
-#container #controls div button {
-  cursor: pointer;
-  min-width: 50px;
-  border: none;
-  outline: 1px solid #ccc;
-  padding: 3px 5px;
-  margin: 0 1px;
-  line-height: 25px;
-  font-size: 16px;
-  font-family: serif;
-  background: transparent;
-  transition: background 100ms;
-  color: black;
-}
-#container #controls div button:hover {
-  background: #333;
-  color: white;
-}
-#container #controls div button:active {
-  background: #ccc;
-  color: black;
 }
 #container #controls div #btn-pause {
   display: none;
@@ -356,6 +309,32 @@ body {
 #container .rm-IOB {
   background: gold;
 }
+
+/* Button used in control row */
+.btn {
+  cursor: pointer;
+  min-width: 50px;
+  border: none;
+  outline: 1px solid #ccc;
+  padding: 3px 5px;
+  margin: 0 1px;
+  line-height: 25px;
+  font-size: 16px;
+  font-family: serif;
+  background: transparent;
+  transition: background 100ms;
+  color: black;
+}
+.btn:hover {
+  background: #333;
+  color: white;
+}
+.btn:active {
+  background: #ccc;
+  color: black;
+}
+
+/* Button group used in settings */
 .btn-group {
   display: inline-block;
   vertical-align: middle;
