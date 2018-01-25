@@ -328,6 +328,12 @@ body {
   width: 100px;
   text-align: right;
 }
+#container #registers .register-col .register:read-only {
+  background-color: #ddd;
+}
+#container #registers .register-col .register:-moz-read-only {
+  background-color: #ddd;
+}
 #container .memory-col {
   width: 150px;
   display: inline-block;
