@@ -710,7 +710,7 @@ DLX.Launch = function() {
         });
         na.addEventListener('click', function() {
             DLX.loadProgram(this);
-            $('save-load').querySelector('button').click();
+            $('btn-sl-close').click();
         });
         de.addEventListener('click', function() {
             DLX.deleteProgram(this);
@@ -889,7 +889,7 @@ DLX.Launch = function() {
             s.style.display = 'block';
             s.querySelector('.debug').style.display = DLX.Settings.DEBUG_SETTINGS ? 'block' : 'none';
         });
-        $('settings').querySelector('button').addEventListener('click', function() {
+        $('btn-settings-close').addEventListener('click', function() {
             $('settings').style.display = 'none';
         });
 
@@ -898,14 +898,47 @@ DLX.Launch = function() {
             exs[_i].addEventListener('click', function() {
                 var ex = Array.prototype.slice.call($('examples').querySelectorAll('.example')).indexOf(this);
                 DLX.Editor.setValue(b64_to_utf8(unescape(DLX.Examples[ex])));
-                $('save-load').querySelector('button').click();
+                $('btn-sl-close').click();
             });
         }
 
         $('btn-save-load').addEventListener('click', function() {
             $('save-load').style.display = 'block';
         });
-        $('save-load').querySelector('button').addEventListener('click', function() {
+        $('btn-import').addEventListener('click', function(e) {
+            if($('file-import')) {
+                $('file-import').click();
+            }
+            e.preventDefault(); // prevent navigation to "#"
+        }, false);
+        $('form-import').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e2) {
+                var content = e2.target.result;
+                DLX.Editor.setValue(content);
+            };
+
+            reader.readAsText(file);
+            $('btn-sl-close').click();
+        });
+        $('btn-export').addEventListener('click', function() {
+            var code = DLX.Editor.getValue();
+            var file = new Blob([code], {type: 'text/plain'});
+            var name = "dlxtool-export.txt";
+            var a = $('anchor-export');
+
+            if (window.navigator.msSaveOrOpenBlob) {// IE10+
+                window.navigator.msSaveOrOpenBlob(file, name);
+            } else {
+                var url = URL.createObjectURL(file);
+                a.href = url;
+                a.download = name;
+                a.click();
+            }
+        });
+        $('btn-sl-close').addEventListener('click', function() {
             $('save-load').style.display = 'none';
         });
         $('save-new').addEventListener('click', function() {
@@ -914,7 +947,7 @@ DLX.Launch = function() {
         $('save-auto').addEventListener('click', function() {
             var svd = b64_to_utf8(DLX.autoSavedProgram);
             DLX.Editor.setValue(svd);
-            $('save-load').querySelector('button').click();
+            $('btn-sl-close').click();
         });
 
         $('btn-reg').addEventListener('click', function() {

@@ -22,19 +22,19 @@
         <a id="fork" href="https://github.com/huesersohn/dlx" target="_blank">View on GitHub</a>
         <div id="controls">
             <div class="right">
-                <button id="btn-save-load">Save / Load</button>
-                <button id="btn-settings">Settings</button>
+                <button class="btn" id="btn-save-load">Save / Load</button>
+                <button class="btn" id="btn-settings">Settings</button>
             </div>
             <div>
-                <button id="btn-run">Run</button>
-                <button id="btn-play">Play</button>
-                <button id="btn-pause">Pause</button>
-                <button id="btn-step">Step</button>
-                <button id="btn-reset">Reset</button>
+                <button class="btn" id="btn-run">Run</button>
+                <button class="btn" id="btn-play">Play</button>
+                <button class="btn" id="btn-pause">Pause</button>
+                <button class="btn" id="btn-step">Step</button>
+                <button class="btn" id="btn-reset">Reset</button>
             </div>
-            <div class="devide">
-                <button id="btn-reg">Clear registers</button>
-                <button id="btn-mem">Clear memory</button>
+            <div class="divide">
+                <button class="btn" id="btn-reg">Clear registers</button>
+                <button class="btn" id="btn-mem">Clear memory</button>
             </div>
             <div class="cyclecount" id="cyclecount" title="needed cycles (thereof cycles with memory access)">
                 0 (0)
@@ -51,7 +51,9 @@
         </div>
         <div id="memory"></div>
         <div id="settings">
-            <div class="right"><button>Close</button></div>
+            <div class="right">
+              <button id="btn-settings-close">Close</button>
+            </div>
             <h3>Settings</h3>
             <div class="setting">
                 <label>First address in memory:</label>
@@ -187,12 +189,20 @@
             </div>
         </div>
         <div id="save-load">
-            <div class="right"><button>Close</button></div>
+            <form id="form-import">
+              <input type="file" id="file-import" accept="text/plain">
+            </form>
+            <a id="anchor-export"></a>
+            <div class="right" id="sl-control">
+              <button class="btn" id="btn-import">Import</button>
+              <button class="btn" id="btn-export">Export</button>
+              <button class="btn" id="btn-sl-close">Close</button>
+            </div>
             <h3>Example programs</h3>
             <ul id="examples">
                 <li class="example">Is n even? (1)</li><li class="example">Is n even? (2)</li><li class="example">Sum of 1 to n</li><li class="example">Is n prime?</li><li class="example">Sum n recursive</li>
             </ul>
-            <h3>Saved programs<span id="export-import"><span id="export">export</span> / <span id="import">import</span></span></h3>
+            <h3>Saved programs</h3>
             <ul id="saves">
                 <li id="save-auto">Reload autosave</li><li id="save-new">New</li>
             </ul>
