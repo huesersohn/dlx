@@ -377,3 +377,10 @@ body {
   border: 1px solid #2c5999;
   box-shadow: inset 0 1px 2px #3264ac;
 }
+
+/* Close, Import and Export buttons in Save/Load view */
+#sl-control .btn {
+  min-width: 60px;
+  display: block;
+  margin-bottom: 15px;
+}
