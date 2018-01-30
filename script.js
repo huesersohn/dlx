@@ -105,6 +105,7 @@ DLX.Launch = function() {
         STEP_RESTART: 1,
         THEME: 'dark',
         AUTOSAVE: 1,
+        NUMBER_BASE: 10,
 
         // hidden
         DEBUG_SETTINGS: 0,
@@ -477,23 +478,33 @@ DLX.Launch = function() {
         return ret;
     };
 
-    DLX.getAddress = function(p,d) {
-        var address,ret;
-        if (/#/.test(p)) {
-            address = DLX.getImmediate(p);
-        } else {
-            var disp = parseInt(p.split('(')[0]);
-            var reg = p.split('(')[1].split(')')[0];
-            reg = DLX.getRegister(reg);
-            address = disp+reg;
-        }
-        var sel = (address - DLX.Settings.FIRST_ADDRESS)/4 | 0;
-        ret = DLX.Memory[sel];
-        if (ret == undefined) {
+    DLX.resolveAddress = function(p) {
+      var address;
+      if (/#/.test(p)) {
+          address = DLX.getImmediate(p);
+      } else {
+          var disp = parseInt(p.split('(')[0]);
+          var reg = p.split('(')[1].split(')')[0];
+          reg = DLX.getRegister(reg);
+          address = disp+reg;
+      }
+      return (address - DLX.Settings.FIRST_ADDRESS)/4 | 0;
+    };
+
+    DLX.getAddress = function(p) {
+        var address = DLX.Memory[DLX.resolveAddress(p)];
+        if (address == undefined) {
             return address.toString();
         } else {
-            return d ? ret : [address, parseInt(ret.value)];
+            return [address, parseInt(address.value, DLX.Settings.NUMBER_BASE)];
         }
+    };
+
+    DLX.setAddress = function(p, v) {
+        var input = DLX.Memory[DLX.resolveAddress(p)];
+          if (input != undefined) {
+              input.value = v.toString(DLX.Settings.NUMBER_BASE);
+          }
     };
 
     DLX.getImmediate = function(p) {
@@ -501,13 +512,30 @@ DLX.Launch = function() {
         return parseInt(p);
     };
 
-    DLX.ignoreWrite = 'ignoreWrite';
-    DLX.getRegister = function(i,d) {
+    DLX.getRegister = function(i) {
         if (!(typeof i == 'number')) {
             i = parseInt(i.slice(1));
         }
-        var ret = d && i == 0 ? DLX.ignoreWrite : DLX.Registers[i];
-        return d ? ret : parseInt(ret.value);
+        return parseInt(DLX.Registers[i].value, DLX.Settings.NUMBER_BASE);
+    };
+
+    DLX.isRegisterWritable = function(i) {
+        if (i == 0) {
+          return false;
+        }
+        return true;
+    }
+
+    DLX.setRegister = function(i, v) {
+        if (!(typeof i == 'number')) {
+            i = parseInt(i.slice(1));
+        }
+
+        if (DLX.isRegisterWritable(i)) {
+            DLX.Registers[i].value = v.toString(DLX.Settings.NUMBER_BASE);
+            return true;
+        }
+        return false;
     };
 
     DLX.getMarker = function(p) {
@@ -521,21 +549,30 @@ DLX.Launch = function() {
         var p = l.slice(1);
         var r = DLX.commands[c][0];
         var o = DLX.commands[c][1];
-        var dest,ev;
-        if (r == 'ra' || r == 'ar') {
+        var ev;
+        if (o == 'sw') {
+            // SW
             DLX.CYCLECOUNT.MEMORY++;
-            // SW or LW
-            dest = o(p[0], true);
-            if (typeof dest == 'string') {
-                ret = DLX.error('Address ' + prettyParams(p[0]) + ' => ' + dest + ' is out of bounds.', n);
+            var addr = DLX.getAddress(p[0])
+            if (typeof addr == 'string') {
+                ret = DLX.error('Address ' + prettyParams(p[0]) + ' => ' + addr + ' is out of bounds.', n);
             } else {
                 ev = DLX.evalParams(p.slice(1),r.slice(1),n);
                 if (typeof ev == "number" && ev == DLX.returnCodes.ERROR) {
                     ret = ev;
                 } else {
-                    if (dest != DLX.ignoreWrite) {
-                        dest.value = ev[0];
-                    }
+                    DLX.setAddress(p[0], ev[0]);
+                }
+            }
+        } else if (o == 'lw') {
+            // LW
+            DLX.CYCLECOUNT.MEMORY++;
+            ev = DLX.evalParams(p.slice(1),r.slice(1),n);
+            if (typeof ev == "number" && ev == DLX.returnCodes.ERROR) {
+                ret = ev;
+            } else {
+                if (DLX.isRegisterWritable) {
+                    DLX.setRegister(p[0], ev[0]);
                 }
             }
         } else if (c.slice(0,1) == 'J') {
@@ -545,10 +582,10 @@ DLX.Launch = function() {
                 ret = ev;
             } else {
                 if (o) {
-                    DLX.getRegister(31, true).value = DLX.PC+2;
+                    DLX.setRegister(31, DLX.PC+2);
                 }
                 if (c.slice(-1) == 'R') {
-                  DLX.PC = ev[0]-1;
+                    DLX.PC = ev[0]-1;
                 } else {
                     DLX.PC += ev[0];
                 }
@@ -565,14 +602,13 @@ DLX.Launch = function() {
             }
         } else if (r.slice(0,1) == 'r') {
             // logical and arithmetical operands
-            dest = DLX.getRegister(p[0], true);
             ev = DLX.evalParams(p.slice(1),r.slice(1),n);
             if (typeof ev == "number" && ev == DLX.returnCodes.ERROR) {
                 ret = ev;
             } else {
-                if (dest != DLX.ignoreWrite) {
-                    dest.value = o(ev[0],ev[1]);
-                }
+              if (DLX.isRegisterWritable(p[0])) {
+                  DLX.setRegister(p[0], o(ev[0],ev[1]));
+              }
             }
         } else {
             // HALT or TRAP
@@ -613,8 +649,8 @@ DLX.Launch = function() {
         JAL:  ['m', true],
         JALR: ['r', true],
         JR:   ['r', false],
-        LW:   ['ra', DLX.getRegister],
-        SW:   ['ar', DLX.getAddress],
+        LW:   ['ra', 'lw'],
+        SW:   ['ar', 'sw'],
         HALT: ['', null],
         TRAP: ['i', null],
         MULT: ['rrr', ops['*']]
@@ -770,6 +806,22 @@ DLX.Launch = function() {
             addresses[_i].textContent = '['+_imem+']';
         }
     };
+    DLX.convertRegisters = function(curBase, newBase) {
+        for (var _i = 0; _i < DLX.Registers.length; _i++) {
+            var value = DLX.Registers[_i].value;
+            if (value != '') {
+                DLX.Registers[_i].value = parseInt(value, curBase).toString(newBase);
+            }
+        }
+    };
+    DLX.convertMemory = function(curBase, newBase) {
+        for (var _i = 0; _i < DLX.Memory.length; _i++) {
+            var value = DLX.Memory[_i].value;
+            if (value != '') {
+                DLX.Memory[_i].value = parseInt(value, curBase).toString(newBase);
+            }
+        }
+    };
     DLX.BuildInterface = function() {
         // generate register inputs
         var insertInnerHTML = '';
@@ -841,6 +893,16 @@ DLX.Launch = function() {
                 DLX.WriteSave();
             });
         }
+        radios = document.getElementsByName('number-base');
+        for (var _i = 0; radios[_i]; _i++) {
+            radios[_i].addEventListener('click', function() {
+                var newBase =  parseInt(this.value);
+                DLX.convertRegisters(DLX.Settings.NUMBER_BASE, newBase);
+                DLX.convertMemory(DLX.Settings.NUMBER_BASE, newBase);
+                DLX.Settings.NUMBER_BASE = newBase;
+                DLX.WriteSave();
+            });
+        }
         radios = document.getElementsByName('debug-settings');
         for (var _i = 0; radios[_i]; _i++) {
             radios[_i].addEventListener('click', function() {
@@ -883,6 +945,7 @@ DLX.Launch = function() {
             s.querySelector('input[name="step-restart"][value="'+DLX.Settings.STEP_RESTART+'"]').checked = true;
             s.querySelector('input[name="theme"][value="'+DLX.Settings.THEME+'"]').checked = true;
             s.querySelector('input[name="autosave"][value="'+DLX.Settings.AUTOSAVE+'"]').checked = true;
+            s.querySelector('input[name="number-base"][value="'+DLX.Settings.NUMBER_BASE+'"]').checked = true;
 
             s.querySelector('input[name="debug-settings"][value="'+DLX.Settings.DEBUG_SETTINGS+'"]').checked = true;
             s.querySelector('input[name="correct-warning"][value="'+DLX.Settings.CORRECT_WARNING+'"]').checked = true;
@@ -988,11 +1051,14 @@ DLX.Launch = function() {
         var _check2K = function() {
             this.className = this.className.replace(/ rm-.+/,'');
             removeTooltip(null, this);
-            var val = parseInt(this.value);
-            if (isNaN(this.value) || /[.,]/.test(this.value)) {
+            var val = parseInt(this.value, DLX.Settings.NUMBER_BASE);
+
+            if (this.value == '') {
+              return;
+            } else if (isNaN(val) || /[.,]/.test(this.value)) {
                 this.className += ' rm-NaN';
-                addTooltip('Value is not a 32 bit integer.', null, this);
-            } else if (this.value != '') {
+                addTooltip('Value is not a base '+DLX.Settings.NUMBER_BASE+' 32 bit integer.', null, this);
+            } else {
                 var trim = _32(val);
                 if (trim != val) {
                     this.className += ' rm-IOB';

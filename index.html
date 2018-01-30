@@ -52,7 +52,7 @@
         <div id="memory"></div>
         <div id="settings">
             <div class="right">
-              <button id="btn-settings-close">Close</button>
+              <button class="btn" id="btn-settings-close">Close</button>
             </div>
             <h3>Settings</h3>
             <div class="setting">
@@ -154,6 +154,23 @@
                     <label>
                         <input type="radio" name="autosave" value="0">
                         <span class="btn-group-item">Off</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting">
+                <label>Register and memory format:</label>
+                <div class="btn-group">
+                    <label>
+                        <input type="radio" name="number-base" value="2">
+                        <span class="btn-group-item">Binary</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="number-base" value="10">
+                        <span class="btn-group-item">Decimal</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="number-base" value="16">
+                        <span class="btn-group-item">Hexadecimal</span>
                     </label>
                 </div>
             </div>
