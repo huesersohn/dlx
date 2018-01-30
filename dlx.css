@@ -40,6 +40,7 @@ body {
   padding: 3px;
   margin: -3px;
 }
+
 .CodeMirror {
   font-family: Courier, monospace;
   border: 1px solid #ddd;
@@ -93,6 +94,16 @@ body {
 }
 .CodeMirror .DLXhighlighted + .CodeMirror-gutter-wrapper .CodeMirror-linenumber.DLXcurrent + .CodeMirror-gutter-wrapper .CodeMirror-linenumber {
   cursor: default;
+}
+.CodeMirror-linenumber {
+  padding-left: 0px;
+}
+.breakpoints {
+  width: 14px;
+}
+.breakpoint {
+  color: #822;
+  text-align: center;
 }
 #container {
   max-width: 1200px;

@@ -111,7 +111,6 @@ DLX.Launch = function() {
         CORRECT_WARNING: 1
     };
 
-
     // initialize editor
     DLX.Editor = CodeMirror.fromTextArea($('editor'), {
         styleActiveLine: true,
@@ -119,6 +118,7 @@ DLX.Launch = function() {
         cursorHeight: .85,
         lineNumbers: true,
         indentUnit: 4,
+        gutters: ["breakpoints", "CodeMirror-linenumbers"],
         theme: 'dlx-'+DLX.Settings.THEME,
         extraKeys: {
             Tab: function(cm) {
@@ -135,6 +135,18 @@ DLX.Launch = function() {
             'Ctrl-Enter': function(cm) {DLX.Run();}
         }
     });
+
+    DLX.Editor.on("gutterClick", function(cm, n) {
+        var info = cm.lineInfo(n);
+        cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+    });
+
+    function makeMarker() {
+        var marker = document.createElement("div");
+        marker.classList.add("breakpoint");
+        marker.innerHTML = "●";
+        return marker;
+    }
 
 
 
@@ -214,6 +226,7 @@ DLX.Launch = function() {
     }
 
     DLX.Play = function() {
+        var oldPC = DLX.PC;
         var ret;
         if (!DLX.paused) {
           ret = DLX.Step();
@@ -230,11 +243,32 @@ DLX.Launch = function() {
                 $('btn-play').style.display = 'inline-block';
             }
         }
+
+        if (DLX.HasBreakpoint(oldPC)) {
+            DLX.Pause();
+        }
     };
+
     DLX.Pause = function() {
+        $('btn-play').style.display = 'inline-block';
+        $('btn-pause').style.display = 'none';
+
         window.clearTimeout(DLX.playTimeout);
         DLX.paused = true;
     };
+
+    DLX.HasBreakpoint = function(pc) {
+      // The program counter is 0-index, so 1 lower than line number
+      if (pc >= 0) {
+          var lineInfo = DLX.Editor.lineInfo(pc);
+          if (lineInfo.gutterMarkers != null) {
+              if (lineInfo.gutterMarkers.breakpoints != null) {
+                  return true;
+              }
+          }
+      }
+      return false;
+    }
 
     DLX.Reset = function() {
         DLX.CYCLECOUNT.ALL = 0;
@@ -287,6 +321,7 @@ DLX.Launch = function() {
         var ret = DLX.ReadProgram();
         if (!(ret & DLX.returnCodes.ERROR)) {
             while (!DLX.HALTED) {
+                var oldPC = DLX.PC;
                 ret = DLX.Step(true);
                 if (ret & DLX.returnCodes.ERROR) {
                     break;
@@ -301,9 +336,15 @@ DLX.Launch = function() {
                         else break;
                     }
                 }
+
+                if (DLX.HasBreakpoint(oldPC)) {
+                    DLX.currentLine(oldPC);
+                    break;
+                }
             }
         }
         DLX.RefreshCyclecount();
+
         return ret;
     };
 
@@ -864,8 +905,6 @@ DLX.Launch = function() {
             DLX.StartPlaying();
         });
         $('btn-pause').addEventListener('click', function() {
-            $('btn-play').style.display = 'inline-block';
-            this.style.display = 'none';
             DLX.Pause();
         });
         $('btn-step').addEventListener('click', function() {
