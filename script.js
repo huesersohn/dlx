@@ -94,7 +94,7 @@ DLX Interpreter
 var DLX = {};
 
 DLX.Launch = function() {
-    DLX.version = 3.180123;
+    DLX.version = 3.180203;
     DLX.SaveTo = 'DLXInterpreter';
 
     // Settings
@@ -114,6 +114,7 @@ DLX.Launch = function() {
 
     // initialize editor
     DLX.Editor = CodeMirror.fromTextArea($('editor'), {
+        mode: 'dlx',
         styleActiveLine: true,
         autofocus: true,
         cursorHeight: .85,
@@ -132,7 +133,8 @@ DLX.Launch = function() {
                 cm.indentSelection('subtract')
             },
             'Cmd-Enter': function(cm) {DLX.Run();},
-            'Ctrl-Enter': function(cm) {DLX.Run();}
+            'Ctrl-Enter': function(cm) {DLX.Run();},
+            'Ctrl-Space': 'autocomplete'
         }
     });
 
