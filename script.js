@@ -790,7 +790,7 @@ DLX.Launch = function() {
         for (var _i = 0; _i < 8; _i++) {
             insertInnerHTML += '<div class="memory-col">';
             for (var _j = 0; _j < 32; _j++) {
-                insertInnerHTML += '<label><span class="memory-address"></span>'+' <input type="text" class="memory" value="0"></label>';
+                insertInnerHTML += '<label><span class="memory-address"></span>'+' <input type="text" class="memory"></label>';
             }
             insertInnerHTML += '</div>';
         }
@@ -959,7 +959,7 @@ DLX.Launch = function() {
         });
         $('btn-mem').addEventListener('click', function() {
             for (var _i = 0; DLX.Memory[_i]; _i++) {
-                DLX.Memory[_i].value = '0';
+                DLX.Memory[_i].value = '';
             }
         });
 
@@ -1012,3 +1012,23 @@ DLX.Launch = function() {
 };
 
 DLX.Launch();
+
+if (!window.navigator.onLine) document.title = 'OFFLINE | ' + document.title;
+
+// Check if a new cache is available on page load.
+window.addEventListener('load', function(e) {
+
+  window.applicationCache.addEventListener('updateready', function(e) {
+    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+      // Browser downloaded a new app cache.
+      // Swap it in and reload the page to get the new hotness.
+      window.applicationCache.swapCache();
+      //if (confirm('A new version of this site is available. Load it?')) {
+        window.location.reload();
+      //}
+    } else {
+      // Manifest didn't changed. Nothing new to server.
+    }
+  }, false);
+
+}, false);
