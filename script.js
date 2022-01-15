@@ -206,7 +206,8 @@ DLX.Launch = function() {
             DLX.PC = 0;
             DLX.HALTED = false;
 
-            DLX.ReadProgram();
+            var err = DLX.ReadProgram();
+            if (err & DLX.returnCodes.ERROR) return;
 
             DLX.Play();
         } else if (DLX.paused) {
@@ -248,7 +249,10 @@ DLX.Launch = function() {
     DLX.RUNTIMEERROR = false;
     DLX.Step = function(run) {
         var ret = DLX.returnCodes.SUCCESS;
-        if (!run && !DLX.programRead) DLX.ReadProgram();
+        if (!run && !DLX.programRead) {
+            var err = DLX.ReadProgram();
+            if (err & DLX.returnCodes.ERROR) return;
+        }
         if (DLX.Settings.STEP_RESTART && DLX.HALTED) {
             DLX.PC = 0;
             DLX.HALTED = false;
